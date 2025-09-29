@@ -1,349 +1,90 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PawSitter - Find Sitters</title>
-    <style>
-        @font-face {
-            font-family: 'LINESeedSansTH_A_Rg';
-            src: url('LINESeedSansTH_A_Rg.ttf') format('truetype');
-            font-weight: normal;
-            font-style: normal;
-            font-display: swap;
-        }
-        body {
-            font-family: 'LINESeedSansTH_A_Rg', sans-serif;
-            margin: 0;
-            background-color: #f8f8f8;
-            color: #333;
-        }
+{% extends "base.html" %}
+{% load static %}
 
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 25px;
-            background-color: #fff;
-            border-bottom: 1px solid #eee;
-        }
+{% block css%}
+<link rel="stylesheet" href="{% static 'css/find_sitter.css' %}">
+{% endblock %}
 
-        .navbar .logo {
-            font-weight: 600;
-            font-size: 24px;
-            color: #FF3700;
-        }
+{% block title %}
+PawSitter - Find Sitters
+{% endblock %}
 
-        .navbar .nav-links {
-            display: flex;
-            gap: 25px;
-        }
-
-        .navbar .nav-links a {
-            text-decoration: none;
-            color: #555;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .navbar .nav-links a:hover {
-            color: #FF3700;
-        }
-
-        .navbar .profile-icon {
-            width: 40px;
-            height: 40px;
-            background-color: #FF3700;
-            border-radius: 50%;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .dropdown-menu {
-            position: absolute;
-            top: 55px;
-            right: 0;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            width: 150px;
-            z-index: 1000;
-            display: none;
-        }
-
-        .dropdown-menu.active {
-            display: block;
-        }
-
-        .dropdown-menu a {
-            display: block;
-            padding: 12px 15px;
-            text-decoration: none;
-            color: #555;
-            font-weight: 400;
-            border-bottom: 1px solid #eee;
-        }
-
-        .dropdown-menu a:last-child {
-            border-bottom: none;
-        }
-
-        .dropdown-menu a:hover {
-            background-color: #f0f0f0;
-            border-radius: 8px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
-
-        .card {
-            background-color: #fff;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            padding: 25px;
-        }
-
-        .search-container {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 25px;
-            align-items: center;
-        }
-
-        .search-container .filter-text {
-            color: #555;
-            font-weight: 500;
-        }
-
-        .search-container .filter-dropdown,
-        .search-container .search-input {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 10px 15px;
-            font-family: inherit;
-            font-size: 16px;
-            color: #333;
-        }
-
-        .search-container .filter-dropdown {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none' stroke='%23888' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 4.5L6 7.5L9 4.5'/%3E%3C/svg%3E") no-repeat right 15px center;
-            background-size: 12px;
-            padding-right: 35px;
-        }
-
-        .search-container .search-input {
-            flex-grow: 1;
-        }
-
-        .search-container .search-button {
-            background-color: #FF3700;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            padding: 10px 25px;
-            font-family: inherit;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .search-container .search-button:hover {
-            background-color: #e73200;
-        }
-
-        .sitters-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0 15px;
-        }
-
-        .sitters-table thead tr {
-            background-color: transparent;
-        }
-
-        .sitters-table th,
-        .sitters-table td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-
-        .sitters-table th {
-            font-weight: 500;
-            color: #888;
-        }
-
-        .sitters-table td:last-child,
-        .sitters-table th:last-child {
-            text-align: right;
-        }
-        
-        .sitters-table td:first-child {
-             font-weight: 500;
-        }
-        
-        .sitters-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .rating-star {
-            color: #ffc107;
-            margin-left: 5px;
-        }
-
-        /* Responsive styles */
-        @media (max-width: 768px) {
-            .navbar {
-                padding: 15px 15px;
-            }
-
-            .navbar .nav-links {
-                display: none;
-            }
-
-            .container {
-                margin: 20px auto;
-                padding: 0 15px;
-            }
-
-            .card {
-                padding: 15px;
-            }
-
-            .search-container {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 10px;
-            }
-            
-            .search-container .search-button {
-                width: 100%;
-            }
-
-            .sitters-table {
-                font-size: 14px;
-                display: block;
-                overflow-x: auto;
-                white-space: nowrap;
-                -webkit-overflow-scrolling: touch;
-            }
-
-            .sitters-table thead {
-                display: none;
-            }
-
-            .sitters-table tbody tr {
-                display: flex;
-                flex-direction: column;
-                margin-bottom: 15px;
-                padding: 15px;
-                background-color: #fff;
-                border-radius: 8px;
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            }
-
-            .sitters-table td {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 8px 0;
-                border-bottom: 1px solid #eee;
-                white-space: normal;
-            }
-
-            .sitters-table td:last-child {
-                border-bottom: none;
-            }
-
-            .sitters-table td::before {
-                content: attr(data-label);
-                font-weight: 500;
-                color: #888;
-                text-align: left;
-            }
-            
-            .sitters-table td:last-child {
-                text-align: right;
-            }
-            
-            .sitters-table td:first-child {
-                font-weight: 600;
-            }
-
-        }
-    </style>
-</head>
-<body>
-
-    <nav class="navbar">
-        <div class="logo">PawSitter</div>
-        <div class="nav-links">
-            <a href="#">Find Sitters</a>
-            <a href="#">Your Bookings</a>
-        </div>
-        <div class="profile-icon" id="profileIcon">
-            <div class="dropdown-menu" id="profileDropdown">
-                <a href="#">Profile</a>
-                <a href="#">Sitter centre</a>
-                <a href="#">Log out</a>
-            </div>
-        </div>
-    </nav>
-
-    <div class="container">
-        <div class="card">
-            <div class="search-container">
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="search-container">
+            <form action="{% url 'index_page' %}" method="get">
                 <div class="filter-text">Filter by</div>
-                <select class="filter-dropdown">
+                <select name="filter" class="filter-dropdown">
+                    {% if filter == '' or filter == None %}
+                    <option value="name" selected>Name</option>
+                    {% else %}
                     <option value="name">Name</option>
-                    <option value="price">Price</option>
+                    {% endif %}
+                    {% if filter == 'service' %}
+                    <option value="service" selected>Service</option>
+                    {% else %}
+                    <option value="service">Service</option>
+                    {% endif %}
+                    {% if filter == 'address' %}
+                    <option value="address" selected>Address</option>
+                    {% else %}
+                    <option value="address">Address</option>
+                    {% endif %}
+                    {% if filter == 'rating' %}
+                    <option value="rating" selected>Rating</option>
+                    {% else %}
                     <option value="rating">Rating</option>
+                    {% endif %}
                 </select>
-                <input type="text" class="search-input" placeholder="Search">
-                <button class="search-button">Search</button>
-            </div>
-
-            <div class="table-responsive">
-                <table class="sitters-table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Price</th>
-                            <th>Address</th>
-                            <th>Rating</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        </tbody>
-                </table>
-            </div>
+                <input name="search" id="search" type="text" class="search-input" placeholder="Search"
+                    value="{{ search }}">
+                <button type="submit" class="search-button">Search</button>
+        </div>
+        </form>
+        <div class="table-responsive">
+            <table class="sitters-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Service</th>
+                        <th>Address</th>
+                        <th>Rating</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sitter in sitter_list %}
+                    {% if total %}
+                    <tr>
+                        <td>{{ sitter.full_name }}</td>
+                        <td>
+                            {% for service in sitter.service.all %}
+                            <div class="servi">
+                                {{ service.name }}
+                                <p>
+                                    {{service.price }}.-/day
+                                </p>
+                            </div>
+                            {% endfor %}
+                        </td>
+                        <td>{{ sitter.user.address }}</td>
+                        <td>{{ sitter.avg_rating }}</td>
+                        <td>
+                            <a href="{% url 'detail_page' sitter.id %}" title="Modify" class="cursor-pointer">
+                                <button class="search-button">Detail</button>
+                            </a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
-
-    <script>
-        document.getElementById('profileIcon').addEventListener('click', function() {
-            document.getElementById('profileDropdown').classList.toggle('active');
-        });
-
-        window.addEventListener('click', function(event) {
-            if (!event.target.matches('#profileIcon') && !event.target.closest('#profileIcon')) {
-                var dropdowns = document.getElementsByClassName("dropdown-menu");
-                for (var i = 0; i < dropdowns.length; i++) {
-                    var openDropdown = dropdowns[i];
-                    if (openDropdown.classList.contains('active')) {
-                        openDropdown.classList.remove('active');
-                    }
-                }
-            }
-        });
-    </script>
-
-</body>
-</html>
+</div>
+{% endblock %}
+{% block script %}
+<script src="{% static 'js/find_sitter.js' %}"></script>
+{% endblock %}

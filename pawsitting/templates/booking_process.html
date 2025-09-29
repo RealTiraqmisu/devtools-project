@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -280,14 +281,13 @@
         <a href="#" class="back-link">Back</a>
         <div class="card">
             <div class="profile-header">
-                <div class="profile-name">mahan kong</div>
-                <div class="profile-rating">Rating 3.6</div>
+                <div class="profile-name">{{ sitter_detail.full_name }}</div>
+                <div class="profile-rating">Rating {{ sitter_detail.avg_rating }}</div>
             </div>
-            <div class="profile-address">124, hot street, hot district, hot 39875</div>
+            <div class="profile-address">{{ sitter_detail.user.address }}</div>
             <p class="sitter-bio">
-                lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
+                {{ sitter_detail.bio }}
             </p>
-
             <div class="form-group">
                 <label for="service">Service</label>
                 <select id="service" class="form-control service-dropdown">

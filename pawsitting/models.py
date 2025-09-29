@@ -5,12 +5,13 @@ class User(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
-
+    address = models.TextField()
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
 class Service(models.Model):
     name = models.CharField(max_length=100)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
     description = models.TextField(null=True, blank=True)
 
 class Booking(models.Model):
@@ -32,7 +33,6 @@ class Booking(models.Model):
 class SitterProfile(models.Model):
     user = models.ForeignKey(User, on_delete= models.CASCADE)
     bio = models.TextField(null=True, blank=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
     is_verified = models.BooleanField(default=False)
     service = models.ManyToManyField(Service, blank=True)
     cert_image = models.ImageField(upload_to='image/', null=True, blank=True)
