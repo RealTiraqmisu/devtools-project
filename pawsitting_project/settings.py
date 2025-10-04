@@ -111,7 +111,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTH_USER_MODEL = 'pawsitting.User'
 
-LOGIN_URL = '/login/'
+LOGIN_URL = '/pawsitter/login/'
 LOGIN_REDIRECT_URL = '/pawsitter/index/'
 LOGOUT_REDIRECT_URL = '/pawsitter/index/'
 

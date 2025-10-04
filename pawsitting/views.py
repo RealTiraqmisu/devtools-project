@@ -68,14 +68,33 @@ class DetailView(View):
 @method_decorator(login_required, name='dispatch')
 class ProfileView(View):
     def get(self, request):
-        profile = SitterProfile.objects.filter(user=request.user).first()
+        user = request.user
+        profile = SitterProfile.objects.filter(user=user).first()
+        form1 = UserForm(instance=user)
+        form2 = SitterProfileForm(instance=profile)
         return render(request, 'user_profile.html', {
-            'user': request.user,
-            'profile': profile
+            'form1': form1,
+            'form2': form2
         })
+    
+    def post(self, request):
+        user = request.user
+        form1 = UserForm(request.POST, instance=user)
+
+        if form1.is_valid():
+            form1.save()
+            return redirect('profile')
+        return render(request, 'user_profile.html', {'form1': form1})
+    
+
+class SitterCentreView(View):
+    def get(self, request):
+        return render(request, 'sitter_profile.html')
 
 class LoginView(View):
     def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('index_page')
         form = AuthenticationForm()
         return render(request, 'login.html', {"form": form})
     def post(self, request):
@@ -91,5 +110,5 @@ class LoginView(View):
 class LogoutView(View):
     def get(self, request):
         logout(request)
-        return redirect('/login')
+        return redirect('login')
         
