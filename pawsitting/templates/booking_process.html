@@ -1,341 +1,63 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PawSitter - Book Sitter</title>
-    <style>
-        @font-face {
-            font-family: 'LINESeedSansTH_A_Rg';
-            src: url('LINESeedSansTH_A_Rg.ttf') format('truetype');
-            font-weight: normal;
-            font-style: normal;
-            font-display: swap;
-        }
 
-        body {
-            font-family: 'LINESeedSansTH_A_Rg', sans-serif;
-            margin: 0;
-            background-color: #f8f8f8;
-            color: #333;
-        }
+{% block css%}
+<link rel="stylesheet" href="{% static 'css/booking_process.css' %}">
+{% endblock %}
 
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 25px;
-            background-color: #fff;
-            border-bottom: 1px solid #eee;
-        }
+{% block title %}
+PawSitter - Book Sitter
+{% endblock %}
 
-        .navbar .logo {
-            font-weight: 600;
-            font-size: 24px;
-            color: #FF3700;
-        }
+{% block content %}
 
-        .navbar .nav-links {
-            display: flex;
-            gap: 25px;
-        }
 
-        .navbar .nav-links a {
-            text-decoration: none;
-            color: #555;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .navbar .nav-links a:hover {
-            color: #FF3700;
-        }
-
-        .navbar .profile-icon {
-            width: 40px;
-            height: 40px;
-            background-color: #FF3700;
-            border-radius: 50%;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .dropdown-menu {
-            position: absolute;
-            top: 55px;
-            right: 0;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            width: 150px;
-            z-index: 1000;
-            display: none;
-        }
-
-        .dropdown-menu.active {
-            display: block;
-        }
-
-        .dropdown-menu a {
-            display: block;
-            padding: 12px 15px;
-            text-decoration: none;
-            color: #555;
-            font-weight: 400;
-            border-bottom: 1px solid #eee;
-        }
-
-        .dropdown-menu a:last-child {
-            border-bottom: none;
-        }
-
-        .dropdown-menu a:hover {
-            background-color: #f0f0f0;
-            border-radius: 8px;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
-        
-        .back-link {
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-            color: #555;
-            font-weight: 500;
-            margin-bottom: 20px;
-            gap: 5px;
-        }
-
-        .back-link::before {
-            content: '<';
-            font-size: 20px;
-            line-height: 1;
-        }
-
-        .card {
-            background-color: #fff;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            padding: 25px;
-        }
-
-        .profile-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .profile-name {
-            font-size: 24px;
-            font-weight: 600;
-        }
-
-        .profile-rating {
-            font-size: 16px;
-            color: #888;
-        }
-
-        .profile-address {
-            font-size: 14px;
-            color: #888;
-            margin-bottom: 15px;
-        }
-
-        .sitter-bio {
-            font-size: 16px;
-            line-height: 1.6;
-            color: #555;
-            margin-bottom: 25px;
-        }
-        
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: 500;
-            color: #555;
-            margin-bottom: 8px;
-        }
-        
-        .form-group .form-control {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 16px;
-            box-sizing: border-box;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-        }
-
-        .form-group .form-control:focus {
-            outline: none;
-            border-color: #FF3700;
-        }
-
-        .service-dropdown {
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none' stroke='%23888' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 4.5L6 7.5L9 4.5'/%3E%3C/svg%3E") no-repeat right 15px center;
-            background-size: 12px;
-            padding-right: 35px;
-        }
-
-        .date-inputs {
-            display: flex;
-            gap: 15px;
-        }
-
-        .date-inputs .form-control {
-            flex: 1;
-        }
-
-        .total-price {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 18px;
-            font-weight: 500;
-            margin-bottom: 25px;
-        }
-        
-        .total-price span {
-            font-size: 20px;
-            font-weight: 600;
-        }
-
-        .booking-button {
-            width: 100%;
-            padding: 15px;
-            background-color: #FF3700;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 18px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .booking-button:hover {
-            background-color: #e73200;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .navbar {
-                padding: 15px 15px;
-            }
-
-            .navbar .nav-links {
-                display: none;
-            }
-
-            .container {
-                margin: 20px auto;
-                padding: 0 15px;
-            }
-
-            .card {
-                padding: 15px;
-            }
-
-            .form-group {
-                margin-bottom: 20px;
-            }
-
-            .date-inputs {
-                flex-direction: column;
-                gap: 10px;
-            }
-        }
-    </style>
-</head>
-<body>
-
-    <nav class="navbar">
-        <div class="logo">PawSitter</div>
-        <div class="nav-links">
-            <a href="#">Find Sitters</a>
-            <a href="#">My Bookings</a>
+<div class="container">
+    <a href="{% url 'index_page' %}" style="text-decoration: none;">
+        <div style="margin-bottom: 15px;">
+            <i class="fa-solid fa-chevron-left"></i> Back
         </div>
-        <div class="profile-icon" id="profileIcon">
-            <div class="dropdown-menu" id="profileDropdown">
-                <a href="#">Profile</a>
-                <a href="#">Sitter centre</a>
-                <a href="#">Log out</a>
-            </div>
+    </a>
+    <div class="card">
+        <div class="profile-header">
+            <div class="profile-name">{{ sitter_detail.full_name }}</div>
+            <div class="profile-rating">Rating {{ sitter_detail.avg_rating }}</div>
         </div>
-    </nav>
-
-    <div class="container">
-        <a href="#" class="back-link">Back</a>
-        <div class="card">
-            <div class="profile-header">
-                <div class="profile-name">{{ sitter_detail.full_name }}</div>
-                <div class="profile-rating">Rating {{ sitter_detail.avg_rating }}</div>
-            </div>
-            <div class="profile-address">{{ sitter_detail.user.address }}</div>
-            <p class="sitter-bio">
-                {{ sitter_detail.bio }}
-            </p>
+        <div class="profile-address">{{ sitter_detail.user.address }}</div>
+        <p class="sitter-bio">
+            {{ sitter_detail.bio }}
+        </p>
+        <form method="POST" action="">
+            {% csrf_token %}
             <div class="form-group">
                 <label for="service">Service</label>
-                <select id="service" class="form-control service-dropdown">
-                    <option value="">Select a service</option>
-                    <option value="pet-walker">Pet walker</option>
-                    <option value="pet-sitter">Pet sitter</option>
-                </select>
+                {{ form.service }}
             </div>
-
+    
             <div class="form-group">
                 <div class="date-inputs">
                     <div class="form-group">
                         <label for="startDate">Start date</label>
-                        <input type="date" id="startDate" class="form-control">
+                        {{ form.start_date }}
                     </div>
                     <div class="form-group">
                         <label for="endDate">End date</label>
-                        <input type="date" id="endDate" class="form-control">
+                        {{ form.end_date }}
                     </div>
                 </div>
             </div>
-
             <div class="total-price">
                 <span>Total</span>
                 <span>$1,489.00</span>
             </div>
+    
+            <button type="submit" class="booking-button">Booking</button>
+        </form>
 
-            <button class="booking-button">Booking</button>
-        </div>
     </div>
+</div>
+{% endblock %}
 
-    <script>
-        document.getElementById('profileIcon').addEventListener('click', function() {
-            document.getElementById('profileDropdown').classList.toggle('active');
-        });
-
-        window.addEventListener('click', function(event) {
-            if (!event.target.matches('#profileIcon') && !event.target.closest('#profileIcon')) {
-                var dropdowns = document.getElementsByClassName("dropdown-menu");
-                for (var i = 0; i < dropdowns.length; i++) {
-                    var openDropdown = dropdowns[i];
-                    if (openDropdown.classList.contains('active')) {
-                        openDropdown.classList.remove('active');
-                    }
-                }
-            }
-        });
-    </script>
-
-</body>
-</html>
+{% block script %}
+<script src="{% static 'js/booking_process.js' %}"></script>
+{% endblock %}

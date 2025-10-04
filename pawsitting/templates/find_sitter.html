@@ -71,9 +71,13 @@ PawSitter - Find Sitters
                         <td>{{ sitter.user.address }}</td>
                         <td>{{ sitter.avg_rating }}</td>
                         <td>
+                            {% if user.is_authenticated %}
                             <a href="{% url 'detail_page' sitter.id %}" title="Modify" class="cursor-pointer">
-                                <button class="search-button">Detail</button>
-                            </a>
+                                {% else %}
+                                <a href="{% url 'login' %}" title="Modify" class="cursor-pointer">
+                                    {% endif %}
+                                    <button class="search-button">Book</button>
+                                </a>
                         </td>
                     </tr>
                     {% else %}

@@ -109,6 +109,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = 'pawsitting.User'
+
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/pawsitter/index/'
+LOGOUT_REDIRECT_URL = '/pawsitter/index/'
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
