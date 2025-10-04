@@ -90,6 +90,10 @@ class ProfileView(View):
 class SitterCentreView(View):
     def get(self, request):
         return render(request, 'sitter_profile.html')
+    
+class UserBookingView(View):
+    def get(self, request):
+        return render(request, 'user_booking.html')
 
 class LoginView(View):
     def get(self, request):

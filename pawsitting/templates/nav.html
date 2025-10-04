@@ -94,7 +94,7 @@
     </a>
     <div class="nav-links">
         <a href="{% url 'index_page' %}">Find Sitters</a>
-        <a href="#">Your Bookings</a>
+        <a href="{% url 'userbooking' %}">Your Bookings</a>
     </div>
     <div class="profile-icon" id="profileIcon">
         {% if user.is_authenticated %}
